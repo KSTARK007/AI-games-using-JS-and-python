@@ -1,0 +1,294 @@
+<html>
+    <head>
+    <title>
+         n queens problem
+    </title>
+    </head>
+    <body style="color:rgba(0,0,0,0.0)">
+        <h1 align="center" style="color:rgba(0,0,0,1.0)"> N queens problem </h1>
+        <script>
+            var G=[[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0,0,0,0]];
+            x=20;
+            y=20;
+            drawn=0;
+            obj={};
+            attack=function(idx,jdx){
+
+                //alert("in attack");
+                var i,j,k,r;
+                var count;
+                if(G[idx][jdx]==1){
+                    return -1;
+                }
+                var tmp=[[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0],
+                       [0,0,0,0,0,0,0,0,0,0]];
+                for(i=0;i<10;i++){
+                    for(j=0;j<10;j++){
+                        if(G[i][j]==1){
+                            for(k=0;k<10;k++){
+                                tmp[i][k]=1;
+                                tmp[k][j]=1;
+                            }
+                            if(i>j){
+                                k=0;
+                                while((k<10)&&(i-j+k<10)){
+                                    tmp[parseInt(i-j+k)][k]=1;
+                                    k=parseInt(k)+1;
+                                }
+                            }
+                            else{
+                                k=0;
+                                while((k<10)&&(j-i+k<10)){
+                                    tmp[k][parseInt(j-i+k)]=1;
+                                    k=parseInt(k)+1;
+                                }
+                            }
+                            k=i;
+                            r=j;
+                            while((k<10)&&(r>=0)){
+                                tmp[k][r]=1;
+                                k=parseInt(k)+1;
+                                r=parseInt(r)-1;
+                            }
+                            k=i;
+                            r=j;
+                            while((k>=0)&&(r<10)){
+                                tmp[k][r]=1;
+                                k=parseInt(k)-1;
+                                r=parseInt(r)+1;
+                            }
+                        }
+                    }
+                }
+                //alert("out");
+                if(tmp[idx][jdx]==1){
+                    return -1;//can't place here already being attacked
+                }
+                count=0;
+                for(i=0;i<10;i++){
+                    if(tmp[i][jdx]==0){
+                        count=parseInt(count)+1;
+                    }
+                    if(tmp[idx][i]==0){
+                        count=parseInt(count)+1;
+                    }
+                }
+                //alert("step1");
+                count-=1;//case of tmp[idx][jdx] being considered twice
+                if(idx>jdx){
+                    k=0;
+                    while((parseInt(idx-jdx+k)<10)&&(k<10)){
+                        if(tmp[parseInt(idx-jdx+k)][k]==0){
+                            count=parseInt(count)+1;
+                        }
+                        k+=1;
+                    }
+                }
+                else{
+                    k=0;
+                    while(parseInt(jdx-idx+k)<10){
+                        if(tmp[k][parseInt(jdx-idx+k)]==0){
+                            count=parseInt(count)+1;
+                        }
+                        k+=1;
+                    }
+                }
+                //alert("step2");
+                count=parseInt(count)-1;//same as above
+                k=parseInt(idx)+1;
+                r=parseInt(jdx)-1;
+                //alert("step2.1");
+                while((k<10)&&(r>=0)){
+                    //alert("step2.2");
+                    //alert(k+","+r);
+                    if(tmp[k][r]==0){
+                        count=parseInt(count)+1;
+                    }
+                    k+=1;
+                    r-=1;
+                }
+                k=idx-1;
+                //alert("step2.5");
+                r=jdx+1;
+                while((k>=0)&&(r<10)){
+                    if(tmp[k][r]==0){
+                        count=parseInt(count)+1;
+                    }
+                    k-=1;
+                    r+=1;
+                }
+                //alert("returned");
+                return count;
+            }
+            huristic1=function(){//returns 1 if game terminates else returns 0;
+                var i,j;
+                var max,idx,jdx;
+                var tmp;
+                max=-1;
+                idx=-1;
+                jdx=-1;
+                for(i=0;i<10;i++){
+                    for(j=0;j<10;j++){
+                        tmp=attack(i,j);
+                        if(tmp>max){
+                            max=tmp;
+                            idx=i;
+                            jdx=j;
+                        }
+                    }
+                }
+                if(max==-1){
+                    return 1;
+                }
+                G[idx][jdx]=1;
+                ele=document.getElementById(idx+","+jdx);
+                ele.setAttribute("bgcolor","red");
+                drawn=parseInt(drawn)+1;
+                return 0;
+                for(i=0;i<10;i++){
+                    for(j=0;j<10;j++){
+                        if(attack(i,j)>0){
+                            return 0;
+                        }
+                    }
+                }
+                return 2;
+            }
+            set=function(){
+                //alert("d");
+                if((x>10)&&(y>10)){
+                    //alert("Please select a cell");
+                    return false;
+                }
+                ele=document.createElement("textarea");
+                ele.setAttribute("name","my_inp");
+                //alert("OK");
+                dx=document.querySelector("input");
+                pat=document.querySelector("form");
+                //alert(dx);
+                //alert(pat);
+                //alert("okay");
+                //G[x][y]=1;
+                //alert("calling attack");
+                var r=attack(x,y);
+                //alert("end of attack");
+                if(r==-1){
+                    ele=document.createElement("marquee");
+                    ele.innerHTML="Sorry, You lost!!";
+                    form=document.querySelector("button");
+                    form.parentNode.removeChild(form)
+                    document.querySelector("h1").appendChild(ele);
+                    return;
+                }
+                G[x][y]=1;
+                ele=document.getElementById(x+","+y);
+                ele.setAttribute("bgcolor","red");
+                x=20;
+                y=20;
+                drawn=parseInt(drawn)+1;
+                r=huristic1();
+                if(r===-1){
+                    ele=document.createElement("marquee");
+                    ele.innerHTML="Sorry, You lost!!";
+                    form=document.querySelector("button");
+                    form.parentNode.removeChild(form);
+                    document.querySelector("h1").appendChild(ele);
+                }
+                if(r===1){
+                    ele=document.createElement("marquee");
+                    ele.innerHTML="Congratulations, you won!!";
+                    form=document.querySelector("button");
+                    form.parentNode.removeChild(form);
+                    document.querySelector("h1").appendChild(ele);
+                }
+                /*
+                if(r==2){
+                    ele=document.createElement("marquee");
+                    ele.innerHTML="Match drawn!!";
+                    form=document.querySelector("button");
+                    form.parentNode.removeChild(form);
+                    document.querySelector("h1").appendChild(ele);
+                }
+                */
+                //return true;
+                //alert("returning");
+                if(drawn>=10){
+                    ele=document.createElement("marquee");
+                    ele.innerHTML="Congratulations, match !!";
+                    form=document.querySelector("button");
+                    form.parentNode.removeChild(form);
+                    document.querySelector("h1").appendChild(ele);
+                }
+                x=20;
+                y=20;
+            }
+            obj.get_input=function(event){
+                if((x<10)&&(y<10)){
+                    ele1=document.querySelectorAll("tr");
+                    //alert(i+"," +j+","+ele1.length);
+                    ele2=ele1[x].querySelectorAll("td");
+                    if((parseInt(x)+parseInt(y))%2==0){
+                        //alert("black");
+                        ele2[y].setAttribute("bgcolor","#766F6D");
+                    }
+                    else{
+                        //alert("white");
+                        ele2[y].setAttribute("bgcolor","white");
+                    }
+                }
+                //alert(this);
+                this.setAttribute("bgcolor","orange");
+                var z=this.id.split(",");
+                x=z[0];
+                y=z[1];
+            }
+            initiate=function(){
+                var i,j;
+                var tab = document.createElement("table");
+                tab.setAttribute("align","center");
+                tab.setAttribute("width","500");
+                tab.setAttribute("height","500");
+                tab.setAttribute("style","border: 2px solid black");
+                tab.setAttribute("rules","all");
+                for(i=0;i<10;i++){
+                    var tr = document.createElement("tr");
+                    for(j=0;j<10;j++){
+                        var td = document.createElement("td");
+                        td.setAttribute("id",i+","+j);
+                        if((i+j)%2==0){
+                            td.setAttribute("bgcolor","#766F6D");
+                        }
+                        else{
+                            td.setAttribute("bgcolor","white");
+                        }
+                        //td.innerHTML=i+j;
+                        td.addEventListener("click",obj.get_input,false);
+                        tr.appendChild(td);
+                    }
+                    tab.appendChild(tr);
+                }
+                document.body.appendChild(tab);
+                // ele=document.createElement("button");
+                // ele.setAttribute("right-margin","500px");
+                // ele.setAttribute("positon","center");
+                // ele.setAttribute("onclick","set()");
+                // //ele.setAttribute("method","GET");
+                // ele1=document.createElement("input");
+                // ele1.setAttribute("type","submit");
+                // ele1.setAttribute("submit","Submit");
+                // ele1.setAttribute("value","submit");
+                // ele1.setAttribute("width","500");
+                // ele1.setAttribute("height","300");
+                // ele.appendChild(ele1);
+                // document.body.appendChild(ele);
+            }
+            initiate();
+        </script>
+        <div style="padding-left:630px;"><button type="button" name="button" onclick="set()">SUBMIT</button></div>
+    </body>
+</html>
