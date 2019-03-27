@@ -5,3 +5,6 @@
 2) N-queens(Heuristic and Goal set reduction) - JS GUI
 3) Sudoku(BFS and Backtracking) - Terminal 
 4) tic-tac-toe(mini-max) - JS GUI
+
+## RUN 
+clone the repository and open the index.html file in a browser of your choice
