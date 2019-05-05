@@ -7,4 +7,4 @@
 4) tic-tac-toe(mini-max) - JS GUI
 
 ## RUN 
-clone the repository and open the index.html file in a browser of your choice
+clone the repository and open the index.html file in a browser of your choice or just follow the link in the description 
